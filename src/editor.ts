@@ -134,6 +134,10 @@ export class HourlyWeatherCardEditor extends ScopedRegistryHost(LitElement) impl
         selector: { boolean: {} },
       },
       {
+        name: 'show_current',
+        selector: { boolean: {} },
+      },
+      {
         name: 'show_wind',
         selector: {
           select: {
@@ -172,6 +176,34 @@ export class HourlyWeatherCardEditor extends ScopedRegistryHost(LitElement) impl
         name: 'show_precipitation_probability',
         selector: { boolean: {} },
       },
+      {
+        name: 'precipitation_on_bar',
+        selector: { boolean: {} },
+      },
+      {
+        name: 'precipitation_amount_font_size',
+        selector: {
+          number: {
+            min: 6,
+            max: 24,
+            step: 1,
+            mode: 'box',
+            unit_of_measurement: 'px',
+          },
+        },
+      },
+      {
+        name: 'precipitation_probability_font_size',
+        selector: {
+          number: {
+            min: 6,
+            max: 24,
+            step: 1,
+            mode: 'box',
+            unit_of_measurement: 'px',
+          },
+        },
+      },
     ];
   }
 
@@ -193,10 +225,14 @@ export class HourlyWeatherCardEditor extends ScopedRegistryHost(LitElement) impl
         offset: localize('editor.offset'),
         label_spacing: localize('editor.label_spacing'),
         icons: localize('editor.icons'),
+        show_current: localize('editor.show_current'),
         show_wind: localize('editor.show_wind'),
         show_date: localize('editor.show_date'),
         show_precipitation_amounts: localize('editor.show_precipitation_amounts'),
         show_precipitation_probability: localize('editor.show_precipitation_probability'),
+        precipitation_on_bar: localize('editor.precipitation_on_bar'),
+        precipitation_amount_font_size: localize('editor.precipitation_amount_font_size'),
+        precipitation_probability_font_size: localize('editor.precipitation_probability_font_size'),
       };
 
       return labelMap[schemaItem.name] || schemaItem.name;
