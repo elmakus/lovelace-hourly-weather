@@ -135,7 +135,7 @@ describe('Card', () => {
       cy.addEntity({
         'weather.with_current': {
           state: 'rainy',
-          last_updated: '2022-07-21T16:45:00+00:00',
+          last_updated: '2022-07-21T17:15:00+00:00',
           attributes: {
             temperature: 12,
             wind_speed: 3,
@@ -159,7 +159,7 @@ describe('Card', () => {
       .find('div.axes > div.bar-block div.temperature')
       .then(temperatures => {
         expect(temperatures.eq(0)).to.have.text('12°');
-        expect(temperatures.eq(1)).to.have.text('84°');
+        expect(temperatures.eq(1)).to.have.text('85°');
       });
     cy.get('weather-bar')
       .shadow()
