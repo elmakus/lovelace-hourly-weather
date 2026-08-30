@@ -172,6 +172,8 @@ describe('Card', () => {
             wind_speed: 3,
             wind_bearing: 180,
             pressure: 1009,
+            precipitation: 0,
+            precipitation_probability: 0,
             precipitation_unit: 'mm',
             forecast: win.hourlyWeather.hass.states['weather.mock'].attributes.forecast,
           },
@@ -190,6 +192,11 @@ describe('Card', () => {
 
     cy.get('weather-bar')
       .shadow()
+      .find('div.axes > div.bar-block div.hour')
+      .first()
+      .should('have.text', 'Now');
+    cy.get('weather-bar')
+      .shadow()
       .find('div.axes > div.bar-block div.temperature')
       .then(temperatures => {
         expect(temperatures.eq(0)).to.have.text('12°');
@@ -205,12 +212,12 @@ describe('Card', () => {
       .find('.bar-precipitation-amount')
       .first()
       .invoke('text')
-      .then(text => expect(text.trim()).to.equal('0.35 mm'));
+      .then(text => expect(text.trim()).to.equal('0 mm'));
     cy.get('weather-bar')
       .shadow()
       .find('.bar-precipitation-probability')
       .first()
-      .should('have.text', '75%');
+      .should('have.text', '0%');
   });
 
   it('falls back to forecast when current weather is unavailable', () => {
@@ -266,7 +273,7 @@ describe('Card', () => {
       .shadow()
       .find('div.precipitation')
       .then(values => {
-        expect(values.eq(0)).to.have.text('');
+        expect(values.eq(0)).to.have.text('0 mm');
         expect(values.eq(1)).to.have.text('0.7 mm');
         expect(values.eq(2)).to.have.text('');
       });

@@ -597,6 +597,7 @@ export class HourlyWeatherCard extends LitElement {
             .precipitation_amount_font_size=${config.precipitation_amount_font_size}
             .precipitation_probability_font_size=${config.precipitation_probability_font_size}
             .has_current_segment=${hasCurrentSegment && offset === 0}
+            .current_label=${this.localize('card.now')}
             .show_date=${config.show_date}
             .label_spacing=${labelSpacing}
             .labels=${this.labels}></weather-bar>
@@ -794,15 +795,15 @@ export class HourlyWeatherCard extends LitElement {
         precipitation.push({
           hour: this.formatHour(new Date(fs.datetime), this.hass.locale, hideMinutes),
           precipitationAmount:
-            totalAmount > 0
+            totalAmount > 0 || isCurrentSegment
               ? `${formatNumber(totalAmount, this.hass.locale)} ${unit}`.trim()
               : '',
           precipitationProbability:
-            roundedProbability > 0
+            roundedProbability > 0 || isCurrentSegment
               ? `${formatNumber(roundedProbability, this.hass.locale)}%`
               : '',
           precipitationProbabilityText:
-            roundedProbability > 0
+            roundedProbability > 0 || isCurrentSegment
               ? this.localize(
                 'card.chance_of_precipitation',
                 '{0}',
