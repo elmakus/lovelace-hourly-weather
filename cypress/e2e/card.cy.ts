@@ -209,15 +209,16 @@ describe('Card', () => {
       .should('have.attr', 'data-tippy-content', 'Rain');
     cy.get('weather-bar')
       .shadow()
-      .find('.bar-precipitation-amount')
+      .find('.bar-overlay > .bar-overlay-item')
       .first()
-      .invoke('text')
-      .then(text => expect(text.trim()).to.equal('0 mm'));
+      .find('.bar-precipitation-amount')
+      .should('not.exist');
     cy.get('weather-bar')
       .shadow()
-      .find('.bar-precipitation-probability')
+      .find('.bar-overlay > .bar-overlay-item')
       .first()
-      .should('have.text', '0%');
+      .find('.bar-precipitation-probability')
+      .should('not.exist');
   });
 
   it('falls back to forecast when current weather is unavailable', () => {
@@ -273,9 +274,75 @@ describe('Card', () => {
       .shadow()
       .find('div.precipitation')
       .then(values => {
-        expect(values.eq(0)).to.have.text('0 mm');
+        expect(values.eq(0)).to.have.text('');
         expect(values.eq(1)).to.have.text('0.7 mm');
         expect(values.eq(2)).to.have.text('');
       });
+  });
+
+  it('shows only non-zero current precipitation values', () => {
+    cy.window().then((win: any) => {
+      cy.addEntity({
+        'weather.current_probability_only': {
+          state: 'cloudy',
+          last_updated: '2022-07-21T17:15:00+00:00',
+          attributes: {
+            temperature: 12,
+            precipitation: 0,
+            precipitation_probability: 25,
+            precipitation_unit: 'mm',
+            forecast: win.hourlyWeather.hass.states['weather.mock'].attributes.forecast,
+          },
+        },
+      });
+    });
+    cy.configure({
+      entity: 'weather.current_probability_only',
+      num_segments: '1',
+      label_spacing: '1',
+      show_current: true,
+      show_precipitation_amounts: true,
+      show_precipitation_probability: true,
+      precipitation_on_bar: true,
+    });
+
+    cy.get('weather-bar').shadow().find('.bar-overlay > .bar-overlay-item').first()
+      .find('.bar-precipitation-amount').should('not.exist');
+    cy.get('weather-bar').shadow().find('.bar-overlay > .bar-overlay-item').first()
+      .find('.bar-precipitation-probability').should('have.text', '25%');
+  });
+
+  it('shows both non-zero current precipitation values', () => {
+    cy.window().then((win: any) => {
+      cy.addEntity({
+        'weather.current_rain': {
+          state: 'rainy',
+          last_updated: '2022-07-21T17:15:00+00:00',
+          attributes: {
+            temperature: 12,
+            precipitation: 0.4,
+            precipitation_probability: 25,
+            precipitation_unit: 'mm',
+            forecast: win.hourlyWeather.hass.states['weather.mock'].attributes.forecast,
+          },
+        },
+      });
+    });
+    cy.configure({
+      entity: 'weather.current_rain',
+      num_segments: '1',
+      label_spacing: '1',
+      show_current: true,
+      show_precipitation_amounts: true,
+      show_precipitation_probability: true,
+      precipitation_on_bar: true,
+    });
+
+    cy.get('weather-bar').shadow().find('.bar-overlay > .bar-overlay-item').first()
+      .find('.bar-precipitation-amount').invoke('text')
+      .then(text => expect(text.trim()).to.equal('0.4 mm'));
+    cy.get('weather-bar').shadow().find('.bar-overlay > .bar-overlay-item').first()
+      .find('.bar-precipitation-probability').invoke('text')
+      .then(text => expect(text.trim()).to.equal('25%'));
   });
 });

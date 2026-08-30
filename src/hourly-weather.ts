@@ -795,15 +795,15 @@ export class HourlyWeatherCard extends LitElement {
         precipitation.push({
           hour: this.formatHour(new Date(fs.datetime), this.hass.locale, hideMinutes),
           precipitationAmount:
-            totalAmount > 0 || isCurrentSegment
+            totalAmount > 0
               ? `${formatNumber(totalAmount, this.hass.locale)} ${unit}`.trim()
               : '',
           precipitationProbability:
-            roundedProbability > 0 || isCurrentSegment
+            roundedProbability > 0
               ? `${formatNumber(roundedProbability, this.hass.locale)}%`
               : '',
           precipitationProbabilityText:
-            roundedProbability > 0 || isCurrentSegment
+            roundedProbability > 0
               ? this.localize(
                 'card.chance_of_precipitation',
                 '{0}',
