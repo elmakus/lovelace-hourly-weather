@@ -472,10 +472,10 @@ export class HourlyWeatherCard extends LitElement {
     const upcomingForecast = forecastOnly && currentWeather
       ? forecastOnly.filter(segment => this.isAfterCurrentWeather(segment, currentWeather))
       : forecastOnly;
-    const hasCurrentSegment = !!(upcomingForecast && currentWeather);
-    const forecast = hasCurrentSegment
+    const forecast = upcomingForecast && currentWeather
       ? [currentWeather, ...upcomingForecast]
       : upcomingForecast;
+    const hasCurrentSegment = !!(upcomingForecast && currentWeather);
     const windSpeedUnit = state.attributes.wind_speed_unit ?? '';
     const precipitationUnit = state.attributes.precipitation_unit ?? '';
     const numSegments = this.parseInteger(config.num_segments ?? config.num_hours ?? 12);
@@ -669,12 +669,12 @@ export class HourlyWeatherCard extends LitElement {
     }
 
     const currentTime = new Date(state.last_updated || Date.now()).getTime();
-    const forecastUpToNow = forecast
+    const ongoingForecast = forecast
       ?.filter(segment => {
         const segmentTime = new Date(segment.datetime).getTime();
         return !Number.isNaN(segmentTime) && segmentTime <= currentTime;
-      }) ?? [];
-    const ongoingForecast = forecastUpToNow[forecastUpToNow.length - 1];
+      })
+      .slice(-1)[0];
     const currentPrecipitation = Number(attributes.precipitation);
     const currentProbability = Number(attributes.precipitation_probability);
 
