@@ -101,4 +101,58 @@ describe('Precipitation bar overlay', () => {
     cy.get('weather-bar').shadow().find('.bar-overlay-item').first()
       .find('.bar-precipitation-probability').should('not.exist');
   });
+
+  it('shows ongoing forecast precipitation on the current overlay segment', () => {
+    cy.window().then((win: any) => {
+      cy.addEntity({
+        'weather.current_overlay_fallback': {
+          state: 'rainy',
+          last_updated: '2022-07-21T17:15:00+00:00',
+          attributes: {
+            temperature: 12,
+            precipitation_unit: 'mm',
+            forecast: win.hourlyWeather.hass.states['weather.mock'].attributes.forecast,
+          },
+        },
+      });
+    });
+
+    cy.configure({
+      entity: 'weather.current_overlay_fallback',
+      num_segments: '2',
+      label_spacing: '1',
+      show_current: true,
+      show_precipitation_amounts: true,
+      show_precipitation_probability: true,
+      precipitation_on_bar: true,
+    });
+
+    cy.get('weather-bar').shadow().find('.bar-overlay-item').first()
+      .should('have.attr', 'aria-label')
+      .and('contain', 'Rain')
+      .and('contain', '0.35 mm')
+      .and('contain', '75% chance of precipitation');
+    cy.get('weather-bar').shadow().find('.bar-overlay-item').first()
+      .find('.bar-precipitation-amount').should('have.text', '0.35 mm');
+    cy.get('weather-bar').shadow().find('.bar-overlay-item').first()
+      .find('.bar-precipitation-probability').should('have.text', '75%');
+  });
+
+  it('follows automatic label spacing as the card width changes', () => {
+    cy.viewport(478, 400);
+    cy.configure({
+      num_segments: '12',
+      label_spacing: '1',
+      auto_label_spacing: true,
+      show_precipitation_amounts: true,
+      precipitation_on_bar: true,
+    });
+
+    cy.get('weather-bar').shadow().find('.bar-overlay-item ha-icon')
+      .should('have.length', 6);
+
+    cy.viewport(900, 400);
+    cy.get('weather-bar').shadow().find('.bar-overlay-item ha-icon')
+      .should('have.length', 12);
+  });
 });
