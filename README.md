@@ -19,7 +19,7 @@ An hourly weather card for Home Assistant. Visualize upcoming weather conditions
 
 ✨ Install via HACS
 
-[![Open your Home Assistant instance and open a repository inside the Home Assistant Community Store.](https://my.home-assistant.io/badges/hacs_repository.svg)](https://my.home-assistant.io/redirect/hacs_repository/?owner=decompil3d&repository=lovelace-hourly-weather)
+[![Open your Home Assistant instance and open a repository inside the Home Assistant Community Store.](https://my.home-assistant.io/badges/hacs_repository.svg)](https://github.com/hacs/integration)
 
 ### Alternative method:
 
@@ -188,7 +188,7 @@ label_spacing: |
 | `url`             | string | **Optional** | URL to open on click when action is url. The URL will open in a new tab                            | `none`      |
 | `service`         | string | **Optional** | Service to call (e.g. media_player.media_play_pause) when action defined as call-service           | `none`      |
 | `service_data`    | object | **Optional** | Service data to include (e.g. entity_id: media_player.bedroom)                                     | `none`      |
-| `haptic`          | number | **Optional** | Haptic feedback _success, warning, failure, light, medium, heavy, selection_                       | `none`      |
+| `haptic`          | string | **Optional** | Haptic feedback _success, warning, failure, light, medium, heavy, selection_                       | `none`      |
 | `repeat`          | number | **Optional** | How often to repeat the `hold_action` in milliseconds.                                             | `none`      |
 
 ## Day and night conditions
@@ -273,7 +273,7 @@ one or more of the keys listed below and values that are valid icons installed i
 | `clear-night`         | `mdi:weather-night`               |
 | `cloudy`              | `mdi:weather-cloudy`              |
 | `fog`                 | `mdi:weather-fog`                 |
-| `hail`                | `mdi:weather-hail`                |
+| `hail`                 | `mdi:weather-hail`                |
 | `lightning`           | `mdi:weather-lightning`           |
 | `lightning-rainy`     | `mdi:weather-lightning-rainy`     |
 | `partlycloudy`        | `mdi:weather-partly-cloudy`       |
